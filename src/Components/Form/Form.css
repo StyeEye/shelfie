@@ -1,0 +1,21 @@
+.form {
+    background-color: #3AD886;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding: 15px;
+    border-radius: 10px;
+    float: right;
+    margin: auto;
+    margin: 10px;
+}
+
+.form-image {
+    width: 250px;
+    height: 150px;
+    margin: 0px auto 5px;
+    background-color: white;
+    background-repeat: no-repeat;
+    background-position: center;
+}
