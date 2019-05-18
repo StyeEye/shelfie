@@ -30,6 +30,18 @@ server.get("/api/inventory", (req, res, next) => {
     })
 });
 
+server.get("/api/info/:id", (req, res, next) => {
+    const db = req.app.get(databaseVar);
+
+    db.products.find({id: parseInt(req.params.id)})
+        .then(response => {
+            res.status(200).send(response[0]);
+        })
+        .catch(error => {
+            res.sendStatus(500);
+        })
+})
+
 server.delete("/api/remove/:id", (req, res, next) => {
     const db = req.app.get(databaseVar);
 

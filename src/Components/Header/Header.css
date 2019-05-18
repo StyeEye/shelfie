@@ -1,6 +1,6 @@
 .custom-header {
     width: 100%;
-    height: 50px;
+    height: 70px;
     background-color: #AB2A19;
     color: white;
     font-family: sans-serif;
@@ -12,6 +12,19 @@
 }
 
 .header-image {
-    height: 80%;
+    height: 60%;
     margin-right: 20px;
+}
+
+.custom-header>h1 {
+    margin-right: 20px;
+}
+
+.nav-buttons {
+    color: white;
+    background-color: #ED6B5a;
+    text-decoration: none;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 0px 5px 0px;
 }

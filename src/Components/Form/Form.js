@@ -9,24 +9,72 @@ export default class Form extends Component {
             name: "",
             image: "",
             price: 0,
-            targetId: null
+            targetId: null,
+            lastPath: ""
         }
     }
 
-    componentDidUpdate(prevProps) {
-        const lastId = !prevProps.target ? null : prevProps.target.id;
-        const currentId = !this.props.target ? null : this.props.target.id;
-        if (lastId !== currentId) {
-            this.clearInputs();
+    componentDidMount() {
+        this.updateCheck();
+    }
 
-            const { name, image, price } = this.props.target;
+    componentDidUpdate() {
+        if(this.state.lastPath !== this.props.location.pathname) {
             this.setState({
-                targetId: this.props.target.id,
-                name: name,
-                image: image,
-                price: price
+                lastPath: this.props.location.pathname
+            })
+
+            this.updateCheck();
+        }
+    }
+
+    updateCheck() {
+        if (this.props.location.pathname.indexOf("/edit/") === 0) {
+            // console.log("Yeah,", this.props.match.params.id)
+
+            this.setState({
+                targetId: this.props.match.params.id
+            });
+
+            this.getProduct(this.props.match.params.id);
+        }
+
+        if(this.props.location.pathname.indexOf("/add") === 0) {
+            this.clearInputs();
+            this.setState({
+                targetId: null
             })
         }
+    }
+    // componentDidUpdate(prevProps) {
+    //     const lastId = !prevProps.target ? null : prevProps.target.id;
+    //     const currentId = !this.props.target ? null : this.props.target.id;
+    //     if (lastId !== currentId) {
+    //         this.clearInputs();
+
+    //         const { name, image, price } = this.props.target;
+    //         this.setState({
+    //             targetId: this.props.target.id,
+    //             name: name,
+    //             image: image,
+    //             price: price
+    //         })
+    //     }
+    // }
+
+    getProduct(id) {
+        // console.log("Test id", this.state.targetId)
+        axios.get(`/api/info/${id}`)
+            .then(response => {
+                // console.log(response)
+                if(response.data) {
+                    this.setState({
+                        name: response.data.product_name,
+                        image: response.data.product_image,
+                        price: Number(response.data.price),
+                    })
+                }
+            })
     }
 
     nameChanged = (event) => {
@@ -52,8 +100,7 @@ export default class Form extends Component {
         this.setState({
             name: "",
             image: "",
-            price: 0,
-            targetId: null
+            price: 0
         });
     }
 
@@ -65,7 +112,7 @@ export default class Form extends Component {
         }).then(response => {
             this.clearInputs();
 
-            this.props.refreshFunc();
+            this.props.history.push(`/`);
         })
     }
 
@@ -77,8 +124,20 @@ export default class Form extends Component {
         }).then(response => {
             this.clearInputs();
 
-            this.props.refreshFunc();
+            this.props.history.push(`/`);
         }).catch(error => console.log(error))
+    }
+
+    cancelHit = () => {
+        this.clearInputs();
+
+        if (this.state.targetId !== null) {
+            this.setState({
+                targetId: null
+            });
+
+            this.props.history.push("/");
+        }
     }
 
     render() {
@@ -102,7 +161,7 @@ export default class Form extends Component {
                 <input type="url" value={this.state.image} onInput={this.imageChanged} placeholder="http://" />
                 <p>Price</p>
                 <input type="text" value={this.state.price} onInput={this.priceChanged} />
-                <button onClick={this.clearInputs}>Cancel</button>
+                <button onClick={this.cancelHit}>Cancel</button>
                 {submitButton}
             </div>
         )

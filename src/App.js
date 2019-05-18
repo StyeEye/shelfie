@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 
 import Dashboard from "./Components/Dashboard/Dashboard";
 import Form from "./Components/Form/Form";
@@ -36,33 +37,10 @@ class App extends Component {
     }
   }
 
-  refreshInventory = () => {
-    axios.get("/api/inventory")
-      .then(response => {
-        const cleaned = response.data
-          .map(e => {
-            return {
-              name: e.product_name,
-              image: e.product_image,
-              price: Number(e.price),
-              id: parseInt(e.id)
-            };
-          });
-        console.dir(cleaned)
-        this.setState({
-          inventory: cleaned
-        });
-      });
-  }
-
   editProduct = (id) => {
     this.setState({
       editId: id
     });
-  }
-
-  componentDidMount() {
-    this.refreshInventory();
   }
 
   render() {
@@ -70,11 +48,15 @@ class App extends Component {
 
     return (
       <div className="App">
-        <Header />
-          <Form refreshFunc={this.refreshInventory} target={targetProduct} />
-          <Dashboard inventory={this.state.inventory} refreshFunc={this.refreshInventory}
-            editFunc={this.editProduct} />
-        </div>
+        <Router>
+          <Header />
+          <Switch>
+            <Route path="/add" component={Form} />
+            <Route path="/edit/:id" component={Form}/>} />
+            <Route path="/" component={Dashboard} />
+          </Switch>
+        </Router>
+      </div>
     );
   }
 }

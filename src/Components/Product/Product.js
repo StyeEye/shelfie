@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 import "./Product.css"
 
@@ -16,6 +17,10 @@ export default class Product extends Component {
             });
     }
 
+    editProduct = () => {
+        this.props.history.push(`/edit/${this.props.item.id}`)
+    }
+
     render() {
         const {name, image, price} = this.props.item;
 
@@ -26,7 +31,7 @@ export default class Product extends Component {
                     <h2 className="product-name">{name}</h2>
                     <h3>{"$" + price}</h3>
                     <button onClick={this.deleteProduct} className="product-delete">Delete</button>
-                    <button onClick={() => this.props.editFunc(this.props.item.id)} className="product-update">Edit</button>
+                    <button onClick={this.editProduct} className="product-update">Edit</button>
                 </div>
             </div>
         )
